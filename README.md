@@ -196,6 +196,58 @@ Note that in the workspace, the error will read:
 *** Error in './a.out': double free or corruption (fasttop): 0x0000000001133c20 ***
 ```
 From the output we can see that the stack address is different for `myClass1` and `myClass2` - as was expected. The address of the managed memory block on the heap however is identical. This means that when the first object goes out of scope, it releases the memory resource by calling `free` in its destructor. The second object does the same - which causes the program to crash as the pointer is now referencing an invalid area of memory, which has already been freed.
+The default behavior of both copy constructor and assignment operator is to perform a shallow copy as with the example above. The following figure illustrates the concept:
+![C41-FIG1](https://user-images.githubusercontent.com/28687425/201520054-fc1879d7-7303-4820-a69c-09213025c456.png)
+Fortunately, in C++, the copying process can be controlled by defining a tailored copy constructor as well as a copy assignment operator. The copying process must be closely linked to the respective resource release mechanism and is often referred to as copy-ownership policy. Tailoring the copy constructor according to your memory management policy is an important choice you often need to make when designing a class.
+## No copying policy
+The simplest policy of all is to forbid copying and assigning class instances all together. This can be achieved by declaring, but not defining a private copy constructor and assignment operator (see `NoCopyClass1` below) or alternatively by making both public and assigning the `delete` operator (see `NoCopyClass2` below). The second choice is more explicit and makes it clearer to the programmer that copying has been actively forbidden. Let us have a look at a code example on the right that illustrates both cases.
+```
+class NoCopyClass1
+{
+private:
+    NoCopyClass1(const NoCopyClass1 &);
+    NoCopyClass1 &operator=(const NoCopyClass1 &);
+
+public:
+    NoCopyClass1(){};
+};
+
+class NoCopyClass2
+{
+public:
+    NoCopyClass2(){}
+    NoCopyClass2(const NoCopyClass2 &) = delete;
+    NoCopyClass2 &operator=(const NoCopyClass2 &) = delete;
+};
+
+int main()
+{
+    NoCopyClass1 original1;
+    NoCopyClass1 copy1a(original1); // copy c’tor
+    NoCopyClass1 copy1b = original1; // assigment operator
+
+    NoCopyClass2 original2;
+    NoCopyClass2 copy2a(original2); // copy c’tor
+    NoCopyClass2 copy2b = original2; // assigment operator
+
+    return 0;
+}
+```
+On compiling, we get the following error messages:
+```
+error: calling a private constructor of class 'NoCopyClass1'
+    NoCopyClass1 copy1(original1);
+    NoCopyClass1 copy1b = original1; 
+
+error: call to deleted constructor of 'NoCopyClass2'
+    NoCopyClass2 copy2(original2);
+    NoCopyClass2 copy2b = original2; 
+```
+Both cases effectively prevent the original object from being copied or assigned. In the C++11 standard library, there are some classes for multi-threaded synchronization which use the no copying policy.
+
+
+
+
 
 
 
