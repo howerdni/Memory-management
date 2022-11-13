@@ -564,7 +564,59 @@ The Rule of Five states that if you have to write one of the functions listed be
 
 - A second area of application are cases where ownership needs to be transferred (such as with unique pointers, as we will soon see). The primary difference to shared references is that with move semantics we are not sharing anything but instead we are ensuring through a smart policy that only a single object at a time has access to and thus owns the resource.
 
+Let us now consider a final example:
+```
+void useObject(MyMovableClass obj)
+{
+    std::cout << "using object " << &obj << std::endl;
+}
 
+int main()
+{
+    MyMovableClass obj1(100); // constructor
+
+    useObject(obj1);
+
+    MyMovableClass obj2 = MyMovableClass(200);
+
+    useObject(std:: move(obj2));
+
+    return 0;
+}
+```
+In this case, an instance of `MyMovableClass`, `obj1`, is passed to a function `useObject` by value, thus making a copy of it.
+
+Let us take an immediate look at the output of the program, before going into details:
+
+```
+(1)
+CREATING instance of MyMovableClass at 0x7ffeefbff718 allocated with size = 400 bytes
+
+(2)
+COPYING content of instance 0x7ffeefbff718 to instance 0x7ffeefbff708
+
+using object 0x7ffeefbff708
+
+(3)
+DELETING instance of MyMovableClass at 0x7ffeefbff708
+
+(4)
+CREATING instance of MyMovableClass at 0x7ffeefbff6d8 allocated with size = 800 bytes
+
+(5)
+MOVING (c'tor) instance 0x7ffeefbff6d8 to instance 0x7ffeefbff6e8
+
+using object 0x7ffeefbff6e8
+
+DELETING instance of MyMovableClass at 0x7ffeefbff6e8
+DELETING instance of MyMovableClass at 0x7ffeefbff6d8
+DELETING instance of MyMovableClass at 0x7ffeefbff718
+```
+First, we are creating an instance of `MyMovableClass`, `obj1`, by calling the constructor of the class (1).
+
+Then, we are passing `obj1` by-value to a function `useObject`, which causes a temporary object obj to be instantiated, which is a copy of `obj1` (2) and is deleted immediately after the function scope is left (3).
+
+Then, the function is called with a temporary instance of `MyMovableClass` as its argument, which creates a temporary instance of `MyMovableClass` as an rvalue (4). But instead of making a copy of it as before, the move constructor is used (5) to transfer ownership of that temporary object to the function scope, which saves us one expensive deep-copy.
 
 
 
