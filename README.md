@@ -420,7 +420,19 @@ In the first example we have seen that the default implementation of the copy co
 In order to properly manage memory allocation, deallocation and copying behavior, we have seen that there is an intricate relationship between destructor, copy constructor and copy assignment operator. To this end, the Rule of Three states that if a class needs to have an overloaded copy constructor, copy assignment operator, ~or~ destructor, then it must also implement the other two as well to ensure that memory is managed consistently. As we have seen, the copy constructor and copy assignment operator (which are often almost identical) control how the resource gets copied between objects while the destructor manages the resource deletion.
 You may have noted that in the previous code example, the class SharedCopy does not implement the assignment operator. This is a violation of the Rule of Three and thus, if we were to use something like destination3 = source instead of SharedCopy destination3(source), the counter variable would not be properly decremented.
 
+## What are lvalues and rvalues?
+A good grasp of lvalues and rvalues in C++ is essential for understanding the more advanced concepts of rvalue references and motion semantics.
 
+Let us start by stating that every expression in C++ has a type and belongs to a value category. When objects are created, copied or moved during the evaluation of an expression, the compiler uses these value expressions to decide which method to call or which operator to use.
+
+Prior to C++11, there were only two value categories, now there are as many as five of them:
+![C42-FIG1](https://user-images.githubusercontent.com/28687425/201520864-b6e957ef-e5bc-4a6f-8371-ba98bb0396ae.png)
+
+To keep it short, we do not want to go into all categories, but limit ourselves to lvalues and prvalues:
+
+- Lvalues have an address that can be accessed. They are expressions whose evaluation by the compiler determines the identity of objects or functions.
+
+- Prvalues do not have an address that is accessible directly. They are temporary expressions used to initialize objects or compute the value of the operand of an operator.
 
 
 
