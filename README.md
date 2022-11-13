@@ -144,4 +144,68 @@ char *pStr=new char[25];
 delete[] pStr;
 strcpy(pStr, "Invalid Access");
 ```
+## Default copying
+In C++, a common way of safely accessing resources is by wrapping a manager class around the handle, which is initialized when the resource is acquired (in the class constructor) and released when it is deleted (in the class destructor). This concept is often referred to as Resource Acquisition is Initialization (RAII), which we will discuss in greater depth in the next concept. One problem with this approach though is that copying the manager object will also copy the handle of the resource. This allows two objects access to the same resource - and this can mean trouble.
+```
+#include <iostream>
+
+class MyClass
+{
+private:
+    int *_myInt;
+
+public:
+    MyClass()
+    {
+        _myInt = (int *)malloc(sizeof(int));
+    };
+    ~MyClass()
+    {
+        free(_myInt);
+    };
+    void printOwnAddress() { std::cout << "Own address on the stack is " << this << std::endl; }
+    void printMemberAddress() { std::cout << "Managing memory block on the heap at " << _myInt << std::endl; }
+};
+
+int main()
+{
+    // instantiate object 1
+    MyClass myClass1;
+    myClass1.printOwnAddress();
+    myClass1.printMemberAddress();
+
+    // copy object 1 into object 2
+    MyClass myClass2(myClass1); // copy constructor
+    myClass2.printOwnAddress();
+    myClass2.printMemberAddress();
+
+    return 0;
+}
+```
+The class MyClass has a private member, which is a pointer to a heap-allocated integer. Allocation is performed in the constructor, deallocation is done in the destructor. This means that the memory block of size sizeof(int) is allocated when the objects myClass1 and myClass2 are created on the stack and deallocated when their scope is left, which happens at the end of the main. The difference between myClass1 and myClass2 is that the latter is instantiated using the copy constructor, which duplicates the members in myClass1 - including the pointer to the heap memory where _myInt resides.
+The output of the program looks like the following:
+```
+Own address on the stack is 0x7ffeefbff670
+Managing memory block on the heap at 0x100300060
+Own address on the stack is 0x7ffeefbff658
+Managing memory block on the heap at 0x100300060
+copy_constructor_1(87582,0x1000a95c0) malloc: *** error for object 0x100300060: pointer being freed was not allocated
+```
+Note that in the workspace, the error will read:
+```
+*** Error in './a.out': double free or corruption (fasttop): 0x0000000001133c20 ***
+```
+From the output we can see that the stack address is different for `myClass1` and `myClass2` - as was expected. The address of the managed memory block on the heap however is identical. This means that when the first object goes out of scope, it releases the memory resource by calling `free` in its destructor. The second object does the same - which causes the program to crash as the pointer is now referencing an invalid area of memory, which has already been freed.
+
+
+
+
+
+
+
+
+
+
+
+
 
