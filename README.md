@@ -22,3 +22,4 @@ In the following, a short list of key properties of the stack is listed:
 1. The stack is a **contiguous block of memory**. It will not become fragmented (as opposed to the heap) and it has a fixed maximum size.
 2. When the **maximum size of the stack** memory is exceeded, a program will crash.
 3. Allocating and deallocating **memory is fast** on the stack. It only involves moving the stack pointer to a new position.
+![stack memory](c22-fig1.png)
