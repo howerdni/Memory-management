@@ -23,3 +23,14 @@ In the following, a short list of key properties of the stack is listed:
 2. When the **maximum size of the stack** memory is exceeded, a program will crash.
 3. Allocating and deallocating **memory is fast** on the stack. It only involves moving the stack pointer to a new position.
 ![stack memory](c22-fig1.png)
+## Variable Scopes in C++
+The time between allocation and deallocation is called the lifetime of a variable. Using a variable after its lifetime has ended is a common programming error, against which most modern languages try to protect: Local variables are only available within their respective scope (e.g. inside a function) and are simply not available outside - so using them inappropriately will result in a compile-time error. When using pointer variables however, programmers must make sure that allocation is handled correctly and that no invalid memory addresses are accessed.
+For the allocation of local variables, the following holds:
+1.  Memory is allocated for local variables only after a function has been called. The parameters of a function are also local variables and they are initialized with a value copied from the caller.
+2.  As long as the current thread of execution is within function `A`, memory for the local variables remains allocated. This even holds true in case another function `B` is called from within the current function `A` and the thread of execution moves into this nested function call. However, within function `B`, the local variables of function `A` are not known.
+3.  When the function exits, its locals are deallocated and there is now way to them afterwards - even if the address were still known (e.g. by storing it within a pointer).
+
+
+
+
+
