@@ -29,7 +29,26 @@ For the allocation of local variables, the following holds:
 1.  Memory is allocated for local variables only after a function has been called. The parameters of a function are also local variables and they are initialized with a value copied from the caller.
 2.  As long as the current thread of execution is within function `A`, memory for the local variables remains allocated. This even holds true in case another function `B` is called from within the current function `A` and the thread of execution moves into this nested function call. However, within function `B`, the local variables of function `A` are not known.
 3.  When the function exits, its locals are deallocated and there is now way to them afterwards - even if the address were still known (e.g. by storing it within a pointer).
+## Passing Variables by Value
+```
+//pass_by_value.cpp
+void AddTwo(int val)
+{
+    val += 2;
+}
 
+int main()
+{
+    int val = 0;
+    AddTwo(val);
+    val += 2;
+
+    std::cout << "val = " << val << std::endl;
+ 
+    return 0;
+}
+```
+Consider the example on the right in the `pass_by_value.cpp` file. In main, the integer `val` is initialized with 0. When passing it to the function `AddTwo`, a local copy of `val` is created, which only exists within the scope of `AddTwo`, so the add-operation has no effect on `val` on the caller side. So when `main` returns, `val` has a value of 2
 
 
 
