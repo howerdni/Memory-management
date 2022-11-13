@@ -20,5 +20,5 @@ Generally, three basic types of memory allocation are supported:
 As mentioned in the last section, the stack is the place in virtual memory where the local variables reside, including arguments to functions. Each time a function is called, the stack grows (from top to bottom) and each time a function returns, the stack contracts. When using multiple threads (as in concurrent programming), it is important to know that each thread has its own stack memory - which can be considered thread-safe.
 In the following, a short list of key properties of the stack is listed:
 1. The stack is a **contiguous block of memory**. It will not become fragmented (as opposed to the heap) and it has a fixed maximum size.
-When the **maximum size of the stack** memory is exceeded, a program will crash.
-Allocating and deallocating **memory is fast** on the stack. It only involves moving the stack pointer to a new position.
+2. When the **maximum size of the stack** memory is exceeded, a program will crash.
+3. Allocating and deallocating **memory is fast** on the stack. It only involves moving the stack pointer to a new position.
