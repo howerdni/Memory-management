@@ -635,3 +635,27 @@ C++11 has introduced three types of smart pointers, which are defined in the hea
 - Don't have to delete within the scope
 - can use std::move() to assign a unique pointer to another unique pointer.  
 ### **shared pointer**:
+```
+#include <iostream>
+#include <menory>// shared_ptr // Some User defined type class UDT{
+public:
+// Constructor (called on creation)
+UDT() { std::cout << "UDT Created" << std: :endl; } // Destructor(called on destruction)
+~UDT() { std::cout << "UDT Destroyed" << std::endl; } };
+int main(){
+// Creating our shared pointer
+std::shared_ptr<UDT> ptr1 = std::make_shared<UDT>(); // Then, in a new scope, I share the resource std::shared_ptr<UDT> ptr2 = ptrl;
+// Our reference count is updated
+std::cout <s "use count = " << ptr2.use_count() << std::endl; } // Then, 'ptr2' is 'freed'
+// Then we check our updated reference count
+std::cout << "use count-* << ptrl.use_count() << std::endl; return
+```
+output:
+```
+mike:shared_ptrs g++-g-stdmc++20 main.cp p-o prog
+mike:shared_ptrs ./prog UDT Created
+use count=2 use count=1 UDT Destroyed mike:shared_ptrs 
+```
+
+
+
