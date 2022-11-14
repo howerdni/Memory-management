@@ -659,6 +659,8 @@ mike:shared_ptrs g++-g-stdmc++20 main.cp p-o prog
 mike:shared_ptrs ./prog UDT Created
 use count=2 use count=1 UDT Destroyed mike:shared_ptrs 
 ```
-
+### **weak pointer**:
+- non-owning pointer
+- does not increase the reference count
 
 
