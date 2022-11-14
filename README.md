@@ -618,6 +618,20 @@ Then, we are passing `obj1` by-value to a function `useObject`, which causes a t
 
 Then, the function is called with a temporary instance of `MyMovableClass` as its argument, which creates a temporary instance of `MyMovableClass` as an rvalue (4). But instead of making a copy of it as before, the move constructor is used (5) to transfer ownership of that temporary object to the function scope, which saves us one expensive deep-copy.
 
+## Smart pointer overview
+Since C++11, the standard library includes smart pointers, which help to ensure that programs are free of memory leaks while also remaining exception-safe. With smart pointers, resource acquisition occurs at the same time that the object is initialized (when instantiated with make_shared or make_unique), so that all resources for the object are created and initialized in a single line of code.
 
+In modern C++, raw pointers managed with new and delete should only be used in small blocks of code with limited scope, where performance is critical (such as with placement new) and ownership rights of the memory resource are clear. We will look at some guidelines on where to use which pointer later.
 
+C++11 has introduced three types of smart pointers, which are defined in the header of the standard library:
 
+1. The **unique pointer** std::unique_ptr is a smart pointer which exclusively owns a dynamically allocated resource on the heap. There must not be a second unique pointer to the same resource.
+
+2. The **shared pointer** std::shared_ptr points to a heap resource but does not explicitly own it. There may even be several shared pointers to the same resource, each of which will increase an internal reference count. As soon as this count reaches zero, the resource will automatically be deallocated.
+
+3. The **weak pointer** std::weak_ptr behaves similar to the shared pointer but does not increase the reference counter.
+**unique pointer**:
+- cannot share, no copies are allowed.
+- Don't have to delete within the scope
+- can use std::move() to assign a unique pointer to another unique pointer.
+**shared pointer**:
