@@ -630,8 +630,8 @@ C++11 has introduced three types of smart pointers, which are defined in the hea
 2. The **shared pointer** std::shared_ptr points to a heap resource but does not explicitly own it. There may even be several shared pointers to the same resource, each of which will increase an internal reference count. As soon as this count reaches zero, the resource will automatically be deallocated.
 
 3. The **weak pointer** std::weak_ptr behaves similar to the shared pointer but does not increase the reference counter.  
-**unique pointer**:
+### **unique pointer**:
 - cannot share, no copies are allowed.
 - Don't have to delete within the scope
 - can use std::move() to assign a unique pointer to another unique pointer.  
-**shared pointer**:
+### **shared pointer**:
