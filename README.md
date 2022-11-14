@@ -640,13 +640,16 @@ C++11 has introduced three types of smart pointers, which are defined in the hea
 #include <menory>// shared_ptr // Some User defined type class UDT{
 public:
 // Constructor (called on creation)
-UDT() { std::cout << "UDT Created" << std: :endl; } // Destructor(called on destruction)
+UDT() { std::cout << "UDT Created" << std: :endl; } 
+// Destructor(called on destruction)
 ~UDT() { std::cout << "UDT Destroyed" << std::endl; } };
 int main(){
 // Creating our shared pointer
-std::shared_ptr<UDT> ptr1 = std::make_shared<UDT>(); // Then, in a new scope, I share the resource std::shared_ptr<UDT> ptr2 = ptrl;
+std::shared_ptr<UDT> ptr1 = std::make_shared<UDT>(); 
+// Then, in a new scope, I share the resource std::shared_ptr<UDT> ptr2 = ptrl;
 // Our reference count is updated
-std::cout <s "use count = " << ptr2.use_count() << std::endl; } // Then, 'ptr2' is 'freed'
+std::cout <s "use count = " << ptr2.use_count() << std::endl; } 
+// Then, 'ptr2' is 'freed'
 // Then we check our updated reference count
 std::cout << "use count-* << ptrl.use_count() << std::endl; return
 ```
